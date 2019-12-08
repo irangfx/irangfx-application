@@ -13,9 +13,26 @@ require("dotenv").config();
 // 	});
 // }
 
+async function preparePostLink(page) {
+	// await page.click()
+}
+
+async function preparePostSchedule(page) {
+	await page.type("#title-prompt-text", `${data.title_fa} - ${data.title_en}`);
+	await page.click("a[href='#edit_timestamp'].edit-timestamp");
+	await page.select("#Jmm", data.schedule.month);
+	await page.type("#Jjj", data.schedule.month);
+	await page.type("#Jaa", data.schedule.month);
+	await page.type("#Jmn", data.schedule.minus);
+	await page.type("#Jhh", data.schedule.hour);
+	await page.click("a[href='#edit_timestamp'].save-timestamp");
+}
+
 (async () => {
 	const browser = await puppeteer.launch({ headless: false });
 	const page = await browser.newPage();
+
+	await page.setViewport({ width: 800, height: 1000 });
 
 	await page.goto("https://irangfx.com/login-users/?loggedout=true");
 
@@ -27,15 +44,29 @@ require("dotenv").config();
 		timeout: 0
 	});
 
-	await page.type("#title-prompt-text", `${data.title_fa} - ${data.title_en}`);
-	await page.click("a[href='#edit_timestamp'].edit-timestamp");
-	await page.select("#Jmm", data.schedule.month);
-	await page.type("#Jjj", data.schedule.month);
-	await page.type("#Jaa", data.schedule.month);
-	await page.type("#Jmn", data.schedule.minus);
-	await page.type("#Jhh", data.schedule.hour);
-	await page.click("a[href='#edit_timestamp'].save-timestamp");
-	await page.click("#save-post");
+	await preparePostLink(page);
+	await preparePostSchedule(page);
 
+	const divId = data.premium
+		? "#acf-group_5c6e46d5c157e"
+		: "#acf-group_5c6e4b864d8b3";
+	
+	for (const [index, link] of data.links.entries()) {
+		if (index > 0) await page.click(`${divId} .acf-actions a.acf-button`);
+		await page.click(`${divId} tbody tr:nth-child(${index + 1}) a.button`);
+		await page.waitForSelector("#link-options");
+		await page.type(
+			"#wp-link-url",
+			link.replace(
+				"/domains/pz10448.parspack.net/public_html",
+				"https://dl.irangfx.com"
+			)
+		);
+		await page.type("#wp-link-text", "دانلود این موکاپ");
+		await page.click("#wp-link-target");
+		await page.click("#wp-link-update");
+	}
+
+	// await page.click("#save-post");
 	// await browser.close();
 })();
