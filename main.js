@@ -33,13 +33,7 @@ require("dotenv").config();
 	await preparePostLink(page);
 	await preparePostSchedule(page);
 	await preparePostSlug(page);
-
-	if (data.premium) {
-		await page.click("#acf-field_5c04db456484a-کاربران-ویژه");
-	} else {
-		await page.click("#post-format-gallery");
-		await page.click("#acf-field_5c04db456484a-همه");
-	}
+	await preparePremiumPost(page);
 
 	if (data.formats.includes("PSD")) {
 		await page.click(".acf-field-5d18689195c43 ul>li:nth-child(1)");
@@ -50,9 +44,28 @@ require("dotenv").config();
 
 	if (data.price) await page.type("#acf-field_5c04d83864846", data.price);
 
+	for (const format of data.formats)
+		await page.click(`.acf-field-5c04d88e64847 input[value=${format}]`);
+
+	if (data.formats.includes("PDF")) {
+		await page.click(".acf-field-5c04d5eb6daee ul>li:first-child input");
+	} else {
+		await page.click(".acf-field-5c04d5eb6daee ul>li:last-of-type input");
+	}
+
 	// await page.click("#save-post");
 	// await browser.close();
 })();
+
+async function preparePremiumPost(page) {
+	if (data.premium) {
+		await page.click("#acf-field_5c04db456484a-کاربران-ویژه");
+	}
+	else {
+		await page.click("#post-format-gallery");
+		await page.click("#acf-field_5c04db456484a-همه");
+	}
+}
 
 async function preparePostSlug(page) {
 	await page.waitForSelector(".edit-slug.button");
