@@ -1,0 +1,8 @@
+{
+  "name": "irangfx-application",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@gitlab.com:irangfx/irangfx-application.git",
+  "author": "HamidNE <hamidne@mail.ru>",
+  "license": "MIT"
+}
