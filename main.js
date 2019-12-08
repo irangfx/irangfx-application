@@ -6,9 +6,11 @@ const puppeteer = require("puppeteer");
 
 	await page.goto("https://irangfx.com/login-users/?loggedout=true");
 
-	await page.type("#user_login", "sadegh007shams@gmail.com", { delay: 100 });
-	await page.type("#user_pass", "sadegh1380", { delay: 100 });
+	await page.type("#user_login", "sadegh007shams@gmail.com");
+	await page.type("#user_pass", "sadegh1380");
 	await page.click("#wp-submit");
+
+	await page.goto("https://irangfx.com/wp-admin/post-new.php");
 
 	await page.screenshot({ path: "example.png" });
 
