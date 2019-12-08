@@ -19,11 +19,13 @@ require("dotenv").config();
 
 	await page.setViewport({ width: 800, height: 1000 });
 
-	await page.goto("https://irangfx.com/login-users/?loggedout=true");
+	await page.goto("https://irangfx.com/login-users");
 
-	await page.type("#user_login", process.env.USERNAME, { delay: 50 });
-	await page.type("#user_pass", process.env.PASSWORD, { delay: 50 });
-	await page.click("#wp-submit");
+	while ((await page.url()) !== "https://irangfx.com/wp-admin/") {
+		await page.type("#user_login", process.env.USERNAME);
+		await page.type("#user_pass", process.env.PASSWORD);
+		await page.click("#wp-submit");
+	}
 
 	await page.goto("https://irangfx.com/wp-admin/post-new.php", {
 		timeout: 0
@@ -35,7 +37,6 @@ require("dotenv").config();
 	await preparePostSlug(page);
 	await preparePostPremium(page);
 	await preparePostSoftware(page);
-
 	await preparePostTags(page);
 
 	// await page.click("#save-post");
@@ -43,19 +44,19 @@ require("dotenv").config();
 })();
 
 async function preparePostTags(page) {
-	await page.type("#new-tag-post_tag", data.tags.join(","), { delay: 50 });
+	await page.type("#new-tag-post_tag", data.tags.join(","));
+	await page.click("input.button.tagadd");
 }
 
 async function preparePostSoftware(page) {
-	await page.type("#acf-field_5c04d5eb6d4fd", data.title_en, { delay: 50 });
+	await page.type("#acf-field_5c04d5eb6d4fd", data.title_en);
 	if (data.formats.includes("PSD")) {
 		await page.click(".acf-field-5d18689195c43 ul>li:nth-child(1)");
 	}
 	if (data.formats.includes("AI")) {
 		await page.click(".acf-field-5d18689195c43 ul>li:nth-child(2)");
 	}
-	if (data.price)
-		await page.type("#acf-field_5c04d83864846", data.price, { delay: 50 });
+	if (data.price) await page.type("#acf-field_5c04d83864846", data.price);
 	for (const format of data.formats)
 		await page.click(`.acf-field-5c04d88e64847 input[value=${format}]`);
 	if (data.formats.includes("PDF")) {
@@ -77,15 +78,13 @@ async function preparePostPremium(page) {
 async function preparePostSlug(page) {
 	await page.waitForSelector(".edit-slug.button");
 	await page.click(".edit-slug.button");
-	await page.type("#new-post-slug", data.title_en, { delay: 50 });
+	await page.click("#new-post-slug", { clickCount: 3 });
+	await page.type("#new-post-slug", data.title_en);
 	await page.click("#edit-slug-buttons button.save");
 }
 
 async function preparePostTitle(page) {
-	await page.type("#title-prompt-text", `${data.title_fa} - ${data.title_en}`, {
-		delay: 50
-	});
-	await page.click("a[href='#edit_timestamp'].edit-timestamp");
+	await page.type("#title-prompt-text", `${data.title_fa} - ${data.title_en}`);
 }
 
 async function preparePostLink(page) {
@@ -102,20 +101,20 @@ async function preparePostLink(page) {
 			link.replace(
 				"/domains/pz10448.parspack.net/public_html",
 				"https://dl.irangfx.com"
-			),
-			{ delay: 50 }
+			)
 		);
-		await page.type("#wp-link-text", "دانلود این موکاپ", { delay: 50 });
+		await page.type("#wp-link-text", "دانلود این موکاپ");
 		await page.click("#wp-link-target");
 		await page.click("#wp-link-update");
 	}
 }
 
 async function preparePostSchedule(page) {
+	await page.click("a[href='#edit_timestamp'].edit-timestamp");
 	await page.select("#Jmm", data.schedule.month);
-	await page.type("#Jjj", data.schedule.month, { delay: 50 });
-	await page.type("#Jaa", data.schedule.month, { delay: 50 });
-	await page.type("#Jmn", data.schedule.minus, { delay: 50 });
-	await page.type("#Jhh", data.schedule.hour, { delay: 50 });
+	await page.type("#Jjj", data.schedule.month);
+	await page.type("#Jaa", data.schedule.month);
+	await page.type("#Jmn", data.schedule.minus);
+	await page.type("#Jhh", data.schedule.hour);
 	await page.click("a[href='#edit_timestamp'].save-timestamp");
 }
