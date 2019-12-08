@@ -34,7 +34,23 @@ require("dotenv").config();
 	await preparePostLink(page);
 	await preparePostSchedule(page);
 
-	if (!data.premium) await page.click("#post-format-gallery");
+	if (data.premium) {
+		await page.click("#acf-field_5c04db456484a-کاربران-ویژه");
+	} else {
+		await page.click("#post-format-gallery");
+		await page.click("#acf-field_5c04db456484a-همه");
+	}
+
+	if (data.formats.includes("PSD"))
+		await page.click(
+			"#acf-field_5d18689195c43-https://irangfx.com/download/%d8%af%d8%a7%d9%86%d9%84%d9%88%d8%af-%d9%81%d8%aa%d9%88%d8%b4%d8%a7%d9%be-2019-%d9%85%d8%b9%d8%b1%d9%81%db%8c-%d9%88%db%8c%da%98%da%af%db%8c-%d9%87%d8%a7%db%8c-%d8%ac%d8%af%db%8c%d8%af/"
+		);
+	if (data.formats.includes("AI"))
+		await page.click(
+			"#acf-field_5d18689195c43-https://irangfx.com/download/%d8%af%d8%a7%d9%86%d9%84%d9%88%d8%af-%d8%a7%db%8c%d9%84%d9%88%d8%b3%d8%aa%d8%b1%db%8c%d8%aa%d9%88%d8%b1-2018/"
+		);
+
+	if (data.price) await page.type("#acf-field_5c04d83864846", data.price);
 
 	// await page.click("#save-post");
 	// await browser.close();

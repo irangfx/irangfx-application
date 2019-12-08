@@ -18,5 +18,6 @@ export default {
 	links: [
 		"/domains/pz10448.parspack.net/public_html/premium/photo/20-Photography-Digital-Backgrounds.irangfx.com.rar",
 		"/domains/pz10448.parspack.net/public_html/date-post/1398/1398-5-8/Voucher-Gift-Cards-Template_irangfx.com.rar"
-	]
+	],
+	formats: ["AI", "PSD", "PDF", "EPS", "ZIP"]
 };
