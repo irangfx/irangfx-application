@@ -2,6 +2,17 @@ import puppeteer from "puppeteer";
 import data from "./data";
 require("dotenv").config();
 
+// function optimizeSpeed(params) {
+// 	await page.setRequestInterception(true);
+// 	page.on('request', request => {
+// 		if (['font'].includes(request.resourceType())) {
+// 			request.abort();
+// 		} else {
+// 			request.continue();
+// 		}
+// 	});
+// }
+
 (async () => {
 	const browser = await puppeteer.launch({ headless: false });
 	const page = await browser.newPage();
@@ -18,7 +29,7 @@ require("dotenv").config();
 
 	await page.type("#title-prompt-text", `${data.title_fa} - ${data.title_en}`);
 	await page.click("a[href='#edit_timestamp'].edit-timestamp");
-	await page.select("#Jmm]", data.schedule.month);
+	await page.select("#Jmm", data.schedule.month);
 	await page.type("#Jjj", data.schedule.month);
 	await page.type("#Jaa", data.schedule.month);
 	await page.type("#Jmn", data.schedule.minus);

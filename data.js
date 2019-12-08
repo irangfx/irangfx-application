@@ -6,10 +6,10 @@ export default {
 	source: "https://creativemarket.com/NewTropical/3737195-Sunflora-Unique-Ligature-Font",
 	price: "$14",
 	schedule: {
-		day: 12,
-		month: 10,
-		year: 1398,
-		minus: 0,
-		hour: 22,
+		day: "12",
+		month: "10",
+		year: "1398",
+		minus: "0",
+		hour: "22",
 	}
 }
