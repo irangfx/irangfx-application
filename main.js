@@ -39,8 +39,8 @@ require("dotenv").config();
 	await preparePostSoftware(page);
 	await preparePostTags(page);
 
-	// await page.click("#save-post");
-	// await browser.close();
+	await page.click("#save-post");
+	await browser.close();
 })();
 
 async function preparePostTags(page) {
