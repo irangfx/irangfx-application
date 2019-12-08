@@ -29,10 +29,12 @@ require("dotenv").config();
 		timeout: 0
 	});
 
+	await preparePostTitle(page);
+	await preparePostSlug(page);
 	await preparePostLink(page);
 	await preparePostSchedule(page);
 
-	await preparePostSlug(page);
+	if (!data.premium) await page.click("#post-format-gallery");
 
 	// await page.click("#save-post");
 	// await browser.close();
@@ -43,6 +45,11 @@ async function preparePostSlug(page) {
 	await page.click(".edit-slug.button");
 	await page.type("#new-post-slug", data.title_en);
 	await page.click("#edit-slug-buttons button.save");
+}
+
+async function preparePostTitle(page) {
+	await page.type("#title-prompt-text", `${data.title_fa} - ${data.title_en}`);
+	await page.click("a[href='#edit_timestamp'].edit-timestamp");
 }
 
 async function preparePostLink(page) {
@@ -68,8 +75,6 @@ async function preparePostLink(page) {
 }
 
 async function preparePostSchedule(page) {
-	await page.type("#title-prompt-text", `${data.title_fa} - ${data.title_en}`);
-	await page.click("a[href='#edit_timestamp'].edit-timestamp");
 	await page.select("#Jmm", data.schedule.month);
 	await page.type("#Jjj", data.schedule.month);
 	await page.type("#Jaa", data.schedule.month);
