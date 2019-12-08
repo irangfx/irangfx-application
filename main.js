@@ -13,7 +13,5 @@ require('dotenv').config();
 
 	await page.goto("https://irangfx.com/wp-admin/post-new.php");
 
-	await page.screenshot({ path: "example.png" });
-
 	await browser.close();
 })();
