@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "git@gitlab.com:irangfx/irangfx-application.git",
   "author": "HamidNE <hamidne@mail.ru>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^2.0.0"
+  }
 }
