@@ -24,6 +24,9 @@ const delay = 10;
 	await preparePostSoftware(page);
 	await preparePostTags(page);
 
+	await page.click('.wp-editor-tabs .switch-html');
+	await page.click('#content');
+
 	// await page.click("#save-post");
 	// await browser.close();
 })();
@@ -33,17 +36,6 @@ async function getFileSize(url) {
 	return (Math.round(headers['content-length'] / 1048576 * 100) / 100).toString();
 }
 
-async function optimizeSpeed(page) {
-	await page.setRequestInterception(true);
-	page.on("request", request => {
-		if (["font", "stylesheet"].includes(request.resourceType())) {
-			request.abort();
-		} else {
-			request.continue();
-		}
-	});
-}
-
 async function prepareLogin(page) {
 	await page.goto("https://irangfx.com/login-users/");
 
@@ -51,6 +43,7 @@ async function prepareLogin(page) {
 		await typeValue(page, "#user_login", process.env.USERNAME);
 		await typeValue(page, "#user_pass", process.env.PASSWORD);
 		await page.click("#wp-submit");
+		await page.goto("https://irangfx.com/wp-admin/");
 	}
 }
 
