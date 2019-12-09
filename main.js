@@ -1,10 +1,12 @@
 import puppeteer from "puppeteer";
+import axios from 'axios';
 import data from "./data";
 require("dotenv").config();
 
 const delay = 10;
 
 (async () => {
+
 	const browser = await puppeteer.launch({ headless: false });
 	const page = await browser.newPage();
 	await page.setViewport({ width: 800, height: 1000 });
@@ -25,6 +27,11 @@ const delay = 10;
 	// await page.click("#save-post");
 	// await browser.close();
 })();
+
+async function getFileSize(url) {
+	const { headers } = await axios.head(url);
+	return headers['content-length'] / 1048576;
+}
 
 async function optimizeSpeed(page) {
 	await page.setRequestInterception(true);
@@ -117,15 +124,14 @@ async function preparePostLink(page) {
 		if (index > 0) await page.click(`${divId} .acf-actions a.acf-button`);
 		await page.click(`${divId} tbody tr:nth-child(${index + 1}) a.button`);
 		await page.waitForSelector("#link-options");
-		await typeValue(
-			page,
-			"#wp-link-url",
-			link.replace(
-				"/domains/pz10448.parspack.net/public_html",
-				"https://dl.irangfx.com"
-			)
+		const url = link.replace(
+			"/domains/pz10448.parspack.net/public_html",
+			"https://dl.irangfx.com"
 		);
+
+		await typeValue(page, "#wp-link-url", url);
 		await typeValue(page, "#wp-link-text", "دانلود این موکاپ");
+		await typeValue(page, "#wp-link-text", await getFileSize(url));
 		await page.click("#wp-link-target");
 		await page.click("#wp-link-update");
 	}
