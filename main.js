@@ -30,7 +30,7 @@ const delay = 10;
 
 async function getFileSize(url) {
 	const { headers } = await axios.head(url);
-	return headers['content-length'] / 1048576;
+	return (Math.round(headers['content-length'] / 1048576 * 100) / 100).toString();
 }
 
 async function optimizeSpeed(page) {
@@ -131,9 +131,9 @@ async function preparePostLink(page) {
 
 		await typeValue(page, "#wp-link-url", url);
 		await typeValue(page, "#wp-link-text", "دانلود این موکاپ");
-		await typeValue(page, "#wp-link-text", await getFileSize(url));
 		await page.click("#wp-link-target");
 		await page.click("#wp-link-update");
+		await typeValue(page, `${divId} tbody tr:nth-child(${index + 1}) .acf-field.acf-field-text input`, await getFileSize(url));
 	}
 }
 
