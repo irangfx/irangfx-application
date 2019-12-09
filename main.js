@@ -19,13 +19,7 @@ require("dotenv").config();
 
 	await page.setViewport({ width: 800, height: 1000 });
 
-	await page.goto("https://irangfx.com/login-users");
-
-	while ((await page.url()) !== "https://irangfx.com/wp-admin/") {
-		await page.type("#user_login", process.env.USERNAME);
-		await page.type("#user_pass", process.env.PASSWORD);
-		await page.click("#wp-submit");
-	}
+	await prepareLogin(page);
 
 	await page.goto("https://irangfx.com/wp-admin/post-new.php", {
 		timeout: 0
@@ -39,9 +33,18 @@ require("dotenv").config();
 	await preparePostSoftware(page);
 	await preparePostTags(page);
 
-	await page.click("#save-post");
-	await browser.close();
+	// await page.click("#save-post");
+	// await browser.close();
 })();
+
+async function prepareLogin(page) {
+	await page.goto("https://irangfx.com/login-users/?loggedout=true");
+	while ((await page.url()) !== "https://irangfx.com/wp-admin/") {
+		await page.type("#user_login", process.env.USERNAME);
+		await page.type("#user_pass", process.env.PASSWORD);
+		await page.click("#wp-submit");
+	}
+}
 
 async function preparePostTags(page) {
 	await page.type("#new-tag-post_tag", data.tags.join(","));
@@ -49,7 +52,9 @@ async function preparePostTags(page) {
 }
 
 async function preparePostSoftware(page) {
-	await page.type("#acf-field_5c04d5eb6d4fd", data.title_en);
+	await page.click("#acf-field_5c04d5eb6d4fd", { clickCount: 3 });
+	await page.type("#acf-field_5c04d5eb6d4fd", `Download ${data.title_en}`);
+	
 	if (data.formats.includes("PSD")) {
 		await page.click(".acf-field-5d18689195c43 ul>li:nth-child(1)");
 	}
