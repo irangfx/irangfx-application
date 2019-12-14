@@ -1,12 +1,11 @@
 import puppeteer from "puppeteer";
-import axios from 'axios';
+import axios from "axios";
 import data from "./data";
 require("dotenv").config();
 
 const delay = 10;
 
 (async () => {
-
 	const browser = await puppeteer.launch({ headless: false });
 	const page = await browser.newPage();
 	await page.setViewport({ width: 800, height: 1000 });
@@ -24,8 +23,13 @@ const delay = 10;
 	await preparePostSoftware(page);
 	await preparePostTags(page);
 
-	await page.click('.wp-editor-tabs .switch-html');
-	await page.click('#content');
+	await page.click(".wp-editor-tabs .switch-html");
+	await page.click("#content");
+	await typeValue(
+		page,
+		"#new-post-slug",
+		templateGenerator("mockup", data.title_fa, data.description)
+	);
 
 	// await page.click("#save-post");
 	// await browser.close();
@@ -33,7 +37,9 @@ const delay = 10;
 
 async function getFileSize(url) {
 	const { headers } = await axios.head(url);
-	return (Math.round(headers['content-length'] / 1048576 * 100) / 100).toString();
+	return (
+		Math.round((headers["content-length"] / 1048576) * 100) / 100
+	).toString();
 }
 
 async function prepareLogin(page) {
@@ -126,7 +132,12 @@ async function preparePostLink(page) {
 		await typeValue(page, "#wp-link-text", "دانلود این موکاپ");
 		await page.click("#wp-link-target");
 		await page.click("#wp-link-update");
-		await typeValue(page, `${divId} tbody tr:nth-child(${index + 1}) .acf-field.acf-field-text input`, await getFileSize(url));
+		await typeValue(
+			page,
+			`${divId} tbody tr:nth-child(${index +
+				1}) .acf-field.acf-field-text input`,
+			await getFileSize(url)
+		);
 	}
 }
 
